@@ -4,20 +4,24 @@ export default function SeedCounter() {
   const [name, setName] = useState("");
   const [seedCount, setSeedCount] = useState("");
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
+  const [isLoading, setLoading] = useState(false); // State for loading indicator
 
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://139.185.40.115:8080";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true); // Start loading indicator
 
     // Client-side validation
     if (!name.trim()) {
       setMessage({ text: "Name is required.", type: "error" });
+      setLoading(false); // Stop loading indicator on error
       return;
     }
     const seedCountNum = parseInt(seedCount);
     if (isNaN(seedCountNum) || seedCountNum < 0) {
       setMessage({ text: "Seed count must be a non-negative number.", type: "error" });
+      setLoading(false); // Stop loading indicator on error
       return;
     }
 
@@ -40,7 +44,7 @@ export default function SeedCounter() {
       }
 
       const data = await response.json();
-      setMessage({ text: data.message || "Seed count recorded successfully!", type: "success" });
+      setMessage({ text: data.message || "Papaya pleased. Seeds counted! 🌱😄", type: "success" });
       setName("");
       setSeedCount("");
 
@@ -48,6 +52,8 @@ export default function SeedCounter() {
       setTimeout(() => setMessage(null), 3000);
     } catch (error: any) {
       setMessage({ text: error.message || "An error occurred. Please try again.", type: "error" });
+    } finally {
+      setLoading(false); // Stop loading indicator regardless of success or failure
     }
   };
 
@@ -114,9 +120,12 @@ export default function SeedCounter() {
 
           <button
             type="submit"
-            className="w-full bg-[#4A2B00] text-white text-2xl font-bold py-4 rounded-lg hover:bg-[#3A1F00] transition-colors"
+            className={`w-full bg-[#4A2B00] text-white text-2xl font-bold py-4 rounded-lg hover:bg-[#3A1F00] transition-colors ${
+              isLoading ? "opacity-50 cursor-wait" : ""
+            }`}
+            disabled={isLoading} // Disable button when loading
           >
-            SUBMIT
+            {isLoading ? "Hold tight... 🌀"  : "SUBMIT"} {/* Display 'Loading...' while loading */}
           </button>
         </form>
       </div>
