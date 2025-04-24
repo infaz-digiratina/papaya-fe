@@ -5,7 +5,7 @@ export default function SeedCounter() {
   const [seedCount, setSeedCount] = useState("");
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://222.165.138.144:5020";
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://139.185.40.115:8080";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
